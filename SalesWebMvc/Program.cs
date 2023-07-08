@@ -13,6 +13,8 @@ namespace SalesWebMvc
             builder.Services.AddDbContext<SalesWebMvcContext>(options =>
                 options.UseMySql(connectionStringMysql, ServerVersion.AutoDetect(connectionStringMysql)));
 
+            builder.Services.AddScoped<SeedingService>();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -26,6 +28,13 @@ namespace SalesWebMvc
                 app.UseHsts();
             }
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var seed = services.GetRequiredService<SeedingService>();
+                seed.Seed();
+            }
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
