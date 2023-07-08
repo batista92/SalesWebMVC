@@ -28,12 +28,7 @@ namespace SalesWebMvc
                 app.UseHsts();
             }
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var seed = services.GetRequiredService<SeedingService>();
-                seed.Seed();
-            }
+            app.Services.CreateScope().ServiceProvider.GetRequiredService<SeedingService>().Seed();
             
             app.UseHttpsRedirection();
             app.UseStaticFiles();
